@@ -4,6 +4,7 @@
     tide
     typescript
     tss
+    web-mode
     )
   "List of all packages to install and/or initialize. Built-in packages
 which require an initialization must be listed explicitly in the list.")
@@ -15,7 +16,7 @@ which require an initialization must be listed explicitly in the list.")
   (interactive)
   (setq compilation-read-command nil)
   ;; Create make command for single file.
-  (let ((tsc "/home/shane/.nvm/versions/node/v0.12.7/bin/tsc"))
+  (let ((tsc "tsc"))
     (set (make-local-variable 'compile-command)
          (progn
            (format "%s"
@@ -56,7 +57,16 @@ which require an initialization must be listed explicitly in the list.")
               "mgn" 'tide-find-next-reference
               "mgp" 'tide-find-previous-reference
               "msr" 'tide-restart-server
-              "mrs" 'tide-rename-symbol)))
+              "mrs" 'tide-rename-symbol))
+  (use-package web-mode
+    :defer t
+    :mode ("\\.tsx\\'" . web-mode)
+    :init (progn
+            (add-hook 'web-mode-hook
+                      (lambda ()
+                        (when (string-equal "tsx" (file-name-extension buffer-file-name))
+                          'tide/init-tide-mode)))))
+  )
 
 (when (configuration-layer/layer-usedp 'auto-completion)
   (defun tide/post-init-company ()
