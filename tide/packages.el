@@ -2,8 +2,7 @@
   '(
     company
     tide
-    typescript
-    tss
+    typescript-mode
     web-mode
     )
   "List of all packages to install and/or initialize. Built-in packages
@@ -26,15 +25,14 @@ which require an initialization must be listed explicitly in the list.")
 
 (defun tide/init-tide-mode ()
   (tide-setup)
-  (flycheck-mode 1)
+  (flycheck-mode +1)
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  (eldoc-mode 1)
-  (setq company-tooltip-align-annotations t)
-  (company-mode-on))
+  (eldoc-mode +1)
+  (company-mode +1))
 
 ;; Don't think that this is still needed here, but not sure.
-(defun tide/init-tss ()
-  (use-package tss
+(defun tide/init-typescript-mode ()
+  (use-package typescript-mode
     :defer t
     :mode ("\\.ts\\'" . typescript-mode)
     :init (progn
