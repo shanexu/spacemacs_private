@@ -2,67 +2,74 @@
 ;;
 ;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
-;; Author: Shane Xu <xusheng0711@gmail.com>
+;; Author:  robinx <xingrobin@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; License: GPLv3
 
-;;; Commentary:
-
-;; See the Spacemacs documentation and FAQs for instructions on how to implement
-;; a new layer:
-;;
-;;   SPC h SPC layers RET
-;;
-;;
-;; Briefly, each package to be installed or configured by this layer should be
-;; added to `journal-packages'. Then, for each package PACKAGE:
-;;
-;; - If PACKAGE is not referenced by any other Spacemacs layer, define a
-;;   function `journal/init-PACKAGE' to load and initialize the package.
-
-;; - Otherwise, PACKAGE is already referenced by another Spacemacs layer, so
-;;   define the functions `journal/pre-init-PACKAGE' and/or
-;;   `journal/post-init-PACKAGE' to customize the package as it is loaded.
-
-;;; Code:
-
 (defconst journal-packages
-  '(org-journal)
-  "The list of Lisp packages required by the journal layer.
+  '(
+    org-journal
+    calendar
+    )
+  )
 
-Each entry is either:
+(defun journal//set-global-keys ()
+  (spacemacs/declare-prefix "aj" "journal")
+  (spacemacs/set-leader-keys
+    "ajj" 'org-journal-new-entry)
+  (spacemacs/set-leader-keys
+    "ajv" 'view-journal)
+  (spacemacs/set-leader-keys
+    "ajs" 'org-journal-search)
+  (spacemacs/set-leader-keys
+    "ajS" 'search-all-journals)
+  )
 
-1. A symbol, which is interpreted as a package to be installed, or
+(defun journal//set-major-mode-keys ()
+  (spacemacs/set-leader-keys-for-major-mode 'org-journal-mode
+    "jn" 'org-journal-open-next-entry)
+  (spacemacs/set-leader-keys-for-major-mode 'org-journal-mode
+    "jp"  'org-journal-open-previous-entry)
+  (spacemacs/set-leader-keys-for-major-mode 'org-journal-mode
+    "jj"  'org-journal-new-entry)
+  (spacemacs/set-leader-keys-for-major-mode 'org-journal-mode
+    "js"  'org-journal-search)
+  )
 
-2. A list of the form (PACKAGE KEYS...), where PACKAGE is the
-    name of the package to be installed or loaded, and KEYS are
-    any number of keyword-value-pairs.
-
-    The following keys are accepted:
-
-    - :excluded (t or nil): Prevent the package from being loaded
-      if value is non-nil
-
-    - :location: Specify a custom installation location.
-      The following values are legal:
-
-      - The symbol `elpa' (default) means PACKAGE will be
-        installed using the Emacs package manager.
-
-      - The symbol `local' directs Spacemacs to load the file at
-        `./local/PACKAGE/PACKAGE.el'
-
-      - A list beginning with the symbol `recipe' is a melpa
-        recipe.  See: https://github.com/milkypostman/melpa#recipe-format")
+(defun journal//set-calendar-keys ()
+  (define-key calendar-mode-map "Jj" 'org-journal-new-date-entry)
+  (define-key calendar-mode-map "Jv" 'org-journal-read-entry)
+  (define-key calendar-mode-map "JV" 'org-journal-display-entry)
+  (define-key calendar-mode-map "Jn" 'org-journal-next-entry)
+  (define-key calendar-mode-map "Jp" 'org-journal-previous-entry)
+  (define-key calendar-mode-map "JS" 'org-journal-search-forever)
+  (define-key calendar-mode-map "Jw" 'org-journal-search-calendar-week)
+  (define-key calendar-mode-map "Jm" 'org-journal-search-calendar-month)
+  (define-key calendar-mode-map "Jy" 'org-journal-search-calendar-year)
+  )
 
 (defun journal/init-org-journal ()
   (use-package org-journal
-    :config
-    (global-unset-key (kbd "C-c C-j"))
-    (spacemacs/set-leader-keys
-      "cj" 'org-journal-new-entry)))
+    :defer t
+    :init
+    (progn
+      (journal//set-global-keys)
+      (setq spacemacs-org-journal-mode-map (copy-keymap spacemacs-org-mode-map))
+      (spacemacs//init-leader-mode-map 'org-journal-mode 'spacemacs-org-journal-mode-map)
+      (journal//set-major-mode-keys)
+      )
+    )
+  )
 
-;;; packages.el ends here
+(defun journal/init-calendar ()
+  (use-package calendar
+    :config
+    (progn
+      (journal//set-calendar-keys)
+      )
+    )
+  )
+
