@@ -12,13 +12,13 @@
 
 ;; List of all packages to install and/or initialize. Built-in packages
 ;; which require an initialization must be listed explicitly in the list.
-(setq multiple-cursors-packages
+(setq multi-cursors-packages
     '(
       multiple-cursors
       ))
 
 ;; List of packages to exclude.
-(setq multiple-cursors-excluded-packages '())
+(setq multi-cursors-excluded-packages '())
 
 ;; For each package, define a function multiple-cursors/init-<package-name>
 ;;
@@ -30,12 +30,12 @@
 ;; For more info on `use-package', see readme:
 ;; https://github.com/jwiegley/use-package
 
-(defun multiple-cursors/init-multiple-cursors ()
+(defun multi-cursors/init-multiple-cursors ()
   "Initialize multiple cursors"
   (use-package multiple-cursors
     :init
     (spacemacs/set-leader-keys
-      "el" 'mc/edit-lines
+      "ml" 'mc/edit-lines
       "m>" 'mc/mark-next-like-this
       ;; "mu>" 'mc/unmark-next-like-this
       "m<" 'mc/mark-previous-like-this

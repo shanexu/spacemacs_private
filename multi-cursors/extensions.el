@@ -10,12 +10,12 @@
 ;;
 ;;; License: GPLv3
 
-(setq multiple-cursors-pre-extensions
+(setq multi-cursors-pre-extensions
       '(
         ;; pre extension names go here
         ))
 
-(setq multiple-cursors-post-extensions
+(setq multi-cursors-post-extensions
       '(
         ;; post extension names go here
         ))
