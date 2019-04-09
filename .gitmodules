@@ -1,0 +1,3 @@
+[submodule "w3m"]
+	path = w3m
+	url = https://github.com/venmos/w3m-layer.git
